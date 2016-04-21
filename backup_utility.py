@@ -23,13 +23,11 @@ class File:
         except FileNotFoundError:
             return 0
 
-    def realpath(self):
-        homepath = '/home/' + pwd.getpwuid(os.getuid())[0] + '/'
-        return os.path.dirname(self.filepath.replace(homepath, '', 1))
-
+    def realpath(self, remove=''):
+        return os.path.dirname(self.filepath).replace(remove, '', 1)
 
 def main():
-    file = File('/home/santiago/Documents/Presupuesto.ods')
+    file = File('/home/santiago')
     print(file.exists())
     print(file.size())
     print(file.realpath())
