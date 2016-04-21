@@ -7,7 +7,6 @@ Author: Santiago Narváez Rivas.
 Date: 21-Apr-2016
 """
 import os
-import pwd
 
 
 class Entry:
@@ -40,10 +39,22 @@ class Entry:
     def realpath(self, remove=''):
         return os.path.dirname(self.path).replace(remove, '', 1)
 
+    def format_size(self):
+        suffixes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
+        nbytes = self.size
+        if not nbytes:
+            return '0 B'
+        i = 0
+        while nbytes >= 1000 and i < len(suffixes)-1:
+            nbytes /= 1000
+            i += 1
+        f = ('%.1f' % nbytes)
+        return '%s %s' % (f, suffixes[i])
+
 def main():
     entry = Entry('/home/santiago/Documents')
     print(entry.exists())
-    print(entry.size)
+    print(entry.format_size())
     print(entry.realpath())
     return
 
