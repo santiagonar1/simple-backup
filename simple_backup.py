@@ -120,11 +120,13 @@ class SimpleBackupWindow(Gtk.Window):
             (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
              "Select", Gtk.ResponseType.OK))
         dialog.set_default_size(800, 400)
+        dialog.set_select_multiple(True)
 
         response = dialog.run()
         if response == Gtk.ResponseType.OK:
-            entry = backup_utility.Entry(dialog.get_filename())
-            self.files_to_bakcup.append([entry.path, entry.get_readable_size()])
+            for filename in dialog.get_filenames():
+                entry = backup_utility.Entry(filename)
+                self.files_to_bakcup.append([entry.path, entry.get_readable_size()])
 
         dialog.destroy()
 
