@@ -9,7 +9,7 @@ Date:
 """
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, Gio
+from gi.repository import Gtk, Gio, Gdk
 
 class SimpleBackupWindow(Gtk.Window):
     def __init__(self):
@@ -25,6 +25,8 @@ class SimpleBackupWindow(Gtk.Window):
         self.set_titlebar(hb)
 
         button = Gtk.Button(label='Backup')
+        button.get_style_context().add_class("suggested-action")
+        #button.set_sensitive(True)
         button.connect("clicked", self.on_backup_clicked)
         hb.pack_end(button)
 
@@ -35,11 +37,10 @@ class SimpleBackupWindow(Gtk.Window):
 
 
 def main():
-    win = SimpleBackupWindow()
-    win.connect("delete-event", Gtk.main_quit)
-    win.show_all()
+    window = SimpleBackupWindow()
+    window.connect("delete-event", Gtk.main_quit)
+    window.show_all()
     Gtk.main()
-    return
 
 
 if __name__ == '__main__':
