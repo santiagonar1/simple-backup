@@ -11,13 +11,16 @@ import os
 
 class Entry:
     def __init__(self, path):
-        self.path = path
+        self.path = path.replace(' ', '\\ ')
 
         self.size = None
         if os.path.isfile(self.path):
             self.size = os.path.getsize(self.path)
         elif os.path.isdir(self.path):
             self.size = sum([file.stat().st_size for file in self.scantree()])
+
+    def get_readable_path(self):
+        return self.path.replace('\\ ', ' ')
 
     def exists(self):
         return os.path.exists(self.path)
