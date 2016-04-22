@@ -7,6 +7,7 @@ Problem description:
 Author: Santiago Narváez Rivas.
 Date:
 """
+import backup_utility
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gio, Gdk
@@ -60,7 +61,6 @@ class SimpleBackupWindow(Gtk.Window):
         scrollable_treelist.set_vexpand(True)
 
         self.files_to_bakcup = Gtk.ListStore(str, str)
-        self.files_to_bakcup.append(['/esto/es/un/ejemplo', '45 MB'])
 
         self.treeview = Gtk.TreeView(self.files_to_bakcup)
         select = self.treeview.get_selection()
@@ -115,8 +115,18 @@ class SimpleBackupWindow(Gtk.Window):
         dialog.destroy()
 
     def on_add_clicked(self, button):
-        #TODO: Add files
-        self.files_to_bakcup.append(['/esto/es/un/ejemplo', '45 MB'])
+        dialog = Gtk.FileChooserDialog("Please choose a folder", self,
+            Gtk.FileChooserAction.SELECT_FOLDER,
+            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+             "Select", Gtk.ResponseType.OK))
+        dialog.set_default_size(800, 400)
+
+        response = dialog.run()
+        if response == Gtk.ResponseType.OK:
+            entry = backup_utility.Entry(dialog.get_filename())
+            self.files_to_bakcup.append([entry.path, entry.get_readable_size()])
+
+        dialog.destroy()
 
     def on_remove_clicked(self, button):
         for tree_row_reference in sorted(self.row_references):
