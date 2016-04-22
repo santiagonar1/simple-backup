@@ -11,16 +11,13 @@ import os
 
 class Entry:
     def __init__(self, path):
-        self.path = path.replace(' ', '\\ ')
-
+        self.path = path
+        print(path)
         self.size = None
         if os.path.isfile(self.path):
             self.size = os.path.getsize(self.path)
         elif os.path.isdir(self.path):
             self.size = sum([file.stat().st_size for file in self.scantree()])
-
-    def get_readable_path(self):
-        return self.path.replace('\\ ', ' ')
 
     def exists(self):
         return os.path.exists(self.path)
@@ -36,7 +33,8 @@ class Entry:
                 yield entry
 
     def realpath(self, remove=''):
-        return os.path.dirname(self.path).replace(remove, '', 1)
+        rpath = os.path.dirname(self.path).replace(remove, '', 1)
+        return rpath.replace(' ', '\\ ')
 
     def get_readable_size(self):
         suffixes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
@@ -53,7 +51,7 @@ class Entry:
 class Backup:
     def __init__(self, entries, destiny):
         self.entries = entries[:]
-        self.destiny = destiny
+        self.destiny = destiny.replace(' ', '\\ ')
 
     def start(self, use_common_path=True):
         commonpath = ''
@@ -65,13 +63,14 @@ class Backup:
             dpath = self.destiny + entry.realpath(remove=commonpath)
             if not os.path.exists(dpath):
                 os.makedirs(dpath)
-            c = 'rsync -avz ' + entry.path + ' ' + dpath
+            c = 'rsync -avz ' + entry.path.replace(' ','\\ ') + ' ' + dpath
+            print(c)
             os.system(c)
 
 def main():
     filepaths = ['/home/santiago/Documents/Presupuesto.ods',
              '/home/santiago/Documents/Shortcuts-linux.odt',
-             '/home/santiago/git/Scripts']
+             '/home/santiago/Dropbox/Copias Importantes']
     entries = []
     for path in filepaths:
         entries.append(Entry(path))
