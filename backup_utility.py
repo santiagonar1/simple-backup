@@ -38,7 +38,7 @@ class Entry:
     def realpath(self, remove=''):
         return os.path.dirname(self.path).replace(remove, '', 1)
 
-    def format_size(self):
+    def get_readable_size(self):
         suffixes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
         nbytes = self.size
         if not nbytes:
