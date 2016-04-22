@@ -116,7 +116,7 @@ class SimpleBackupWindow(Gtk.Window):
 
     def on_add_clicked(self, button):
         dialog = Gtk.FileChooserDialog("Please choose a folder", self,
-            Gtk.FileChooserAction.SELECT_FOLDER,
+            Gtk.FileChooserAction.OPEN,
             (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
              "Select", Gtk.ResponseType.OK))
         dialog.set_default_size(800, 400)
