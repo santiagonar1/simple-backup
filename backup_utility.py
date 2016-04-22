@@ -12,7 +12,6 @@ import os
 class Entry:
     def __init__(self, path):
         self.path = path
-        print(path)
         self.size = None
         if os.path.isfile(self.path):
             self.size = os.path.getsize(self.path)
