@@ -26,7 +26,6 @@ class SimpleBackupWindow(Gtk.Window):
 
         button_backup = Gtk.Button(label='Backup')
         button_backup.get_style_context().add_class("suggested-action")
-        button_backup.set_sensitive(True)
         button_backup.connect("clicked", self.on_backup_clicked)
         hb.pack_end(button_backup)
 
@@ -45,10 +44,7 @@ class SimpleBackupWindow(Gtk.Window):
         self.entry_destiny = Gtk.Entry()
         self.entry_destiny.set_size_request(500, -1)
 
-        button_destiny = Gtk.Button()
-        icon = Gio.ThemedIcon(name="document-open-symbolic")
-        image = Gtk.Image.new_from_gicon(icon, Gtk.IconSize.BUTTON)
-        button_destiny.add(image)
+        button_destiny = create_button(iconname='document-open-symbolic')
         button_destiny.connect('clicked', self.on_destiny_clicked)
 
         label.set_mnemonic_widget(button_destiny)
@@ -89,36 +85,17 @@ class SimpleBackupWindow(Gtk.Window):
         hbox.props.spacing = 6
         hbox.set_size_request(-1, 20)
 
-        self.button_add = Gtk.Button()
+        self.button_add = create_button(iconname='list-add-symbolic', text='_Add')
         self.button_add.connect('clicked', self.on_add_clicked)
 
-        hbox2 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        hbox2.props.spacing = 6
-        icon = Gio.ThemedIcon(name="list-add-symbolic")
-        image = Gtk.Image.new_from_gicon(icon, Gtk.IconSize.BUTTON)
-        label = Gtk.Label.new_with_mnemonic('_Add')
-        hbox2.pack_start(image, False, False, 0)
-        hbox2.pack_start(label, True, True, 0)
-        self.button_add.add(hbox2)
-
-        self.button_remove = Gtk.Button()
+        self.button_remove = create_button(iconname='list-remove-symbolic', text='_Remove')
         self.button_remove.set_sensitive(False)
         self.button_remove.connect('clicked', self.on_remove_clicked)
-
-        hbox2 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        hbox2.props.spacing = 6
-        icon = Gio.ThemedIcon(name="list-remove-symbolic")
-        image = Gtk.Image.new_from_gicon(icon, Gtk.IconSize.BUTTON)
-        label = Gtk.Label.new_with_mnemonic('_Remove')
-        hbox2.pack_start(image, False, False, 0)
-        hbox2.pack_start(label, True, True, 0)
-        self.button_remove.add(hbox2)
 
         hbox.pack_end(self.button_remove, False, False, 0)
         hbox.pack_end(self.button_add, False, False, 0)
 
         vbox.pack_start(hbox, False, False, 0)
-
 
     def on_backup_clicked(self, button):
         #TODO: Aqui iniciar el backup
@@ -154,6 +131,20 @@ class SimpleBackupWindow(Gtk.Window):
             self.row_references.append(tree_row_reference)
         self.button_remove.set_sensitive(True)
 
+
+def create_button(iconname='', text=''):
+    button = Gtk.Button()
+    hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+    hbox.props.spacing = 6
+    if iconname:
+        icon = Gio.ThemedIcon(name=iconname)
+        image = Gtk.Image.new_from_gicon(icon, Gtk.IconSize.BUTTON)
+        hbox.pack_start(image, False, False, 0)
+    if text:
+        label = Gtk.Label.new_with_mnemonic(text)
+        hbox.pack_start(label, True, True, 0)
+    button.add(hbox)
+    return button
 
 def main():
     window = SimpleBackupWindow()
