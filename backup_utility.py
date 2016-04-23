@@ -47,6 +47,12 @@ class Entry:
         f = ('%.1f' % nbytes)
         return  '{0:.1f} {1}'.format(nbytes, suffixes[i])
 
+    def __eq__(self, other):
+        return self.path == other.path
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
 class Backup:
     def __init__(self, entries, destiny):
         self.entries = entries[:]
