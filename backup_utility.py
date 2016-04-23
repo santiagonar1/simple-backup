@@ -16,20 +16,10 @@ class Entry:
         if os.path.isfile(self.path):
             self.size = os.path.getsize(self.path)
         elif os.path.isdir(self.path):
-            self.size = sum([file.stat().st_size for file in self.scantree()])
+            self.size = get_tree_size(self.path)
 
     def exists(self):
         return os.path.exists(self.path)
-
-    def scantree(self):
-        """
-        Permite iterar sobre todos los archivos dentro de la entrada. Esta DEBE ser un directorio
-        """
-        for entry in os.scandir(self.path):
-            if entry.is_dir(follow_symlinks=False):
-                yield from Entry(entry.path).scantree()
-            else:
-                yield entry
 
     def realpath(self, remove=''):
         rpath = os.path.dirname(self.path).replace(remove, '', 1)
@@ -82,6 +72,16 @@ def main():
     b = Backup(entries, '/tmp/Backup')
     b.start()
     return
+
+def get_tree_size(path):
+    """Return total size of files in given path and subdirs."""
+    total = 0
+    for entry in os.scandir(path):
+        if entry.is_dir(follow_symlinks=False):
+            total += get_tree_size(entry.path)
+        else:
+            total += entry.stat(follow_symlinks=False).st_size
+    return total
 
 
 if __name__ == '__main__':
