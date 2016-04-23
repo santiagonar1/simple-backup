@@ -125,6 +125,7 @@ class SimpleBackupWindow(Gtk.Window):
         response = dialog.run()
         if response == Gtk.ResponseType.OK:
             for filename in dialog.get_filenames():
+                self.treeview.get_selection().unselect_all()
                 entry = backup_utility.Entry(filename)
                 self.files_to_bakcup.append([entry.path, entry.get_readable_size()])
 
