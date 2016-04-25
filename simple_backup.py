@@ -34,17 +34,17 @@ class SimpleBackupWindow(Gtk.Window):
 
         self.entry_location = builder.get_object('entry_backup_location')
 
-        self.treeview = builder.get_object('tree_view_files_backup')
+        self.tree_view_selector = builder.get_object('tree_view_selector')
         self.list_files_backup = builder.get_object('liststore_files_backup')
-        #self.treeview.set_model(self.list_files_backup)
+        #TODO: Importar el selector desde glade
 
     def on_delete_window(self, *args):
         Gtk.main_quit(*args)
 
     def on_backup_location_clicked(self, button):
         filepath = create_dialog('Please choose a folder',
-                               self.window,
-                               Gtk.FileChooserAction.SELECT_FOLDER)
+                                 self.window,
+                                 Gtk.FileChooserAction.SELECT_FOLDER)
 
         if filepath:
             self.entry_location.set_text(filepath)
@@ -53,14 +53,16 @@ class SimpleBackupWindow(Gtk.Window):
         print("Remove clicked")
 
     def on_add_dir_clicked(self, button):
-        filepath = create_dialog('Please choose a folder',
-                               self.window,
-                               Gtk.FileChooserAction.SELECT_FOLDER)
+        filenames = create_dialog('Please choose a folder',
+                                 self.window,
+                                 Gtk.FileChooserAction.SELECT_FOLDER,
+                                 multiple=True)
 
-        if filepath:
-            self.treeview.get_selection().unselect_all()
-            entry = backup_utility.Entry(filepath)
-            self.list_files_backup.append([entry.path, entry.get_readable_size()])
+        if filenames:
+            self.tree_view_selector.unselect_all()
+            for filename in filenames:
+                entry = backup_utility.Entry(filename)
+                self.list_files_backup.append([entry.path, entry.get_readable_size()])
 
     def on_add_file_clicked(self, button):
         print('Add file clicked')
@@ -216,20 +218,20 @@ def create_button(iconname='', text=''):
     button.add(hbox)
     return button
 
-def create_dialog(title, parent, action):
+def create_dialog(title, parent, action, multiple=False):
     dialog =  Gtk.FileChooserDialog(title, parent,
             action, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
             "Select", Gtk.ResponseType.OK))
-
     dialog.set_default_size(800, 400)
     current_folder = os.path.expanduser('~')
     dialog.set_current_folder(current_folder)
+    dialog.set_select_multiple(multiple)
 
     response = dialog.run()
     if response == Gtk.ResponseType.OK:
-        filename = dialog.get_filename()
+        result = dialog.get_filenames() if multiple else dialog.get_filename()
         dialog.destroy()
-        return filename
+        return result
     elif response == Gtk.ResponseType.CANCEL:
         dialog.destroy()
         return None
