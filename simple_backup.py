@@ -72,9 +72,11 @@ class SimpleBackupWindow(Gtk.Window):
 
         if filenames:
             self.tree_view_selector.unselect_all()
+            filenames_in_tree = self.get_filenames()
             for filename in filenames:
-                entry = backup_utility.Entry(filename)
-                self.list_files_backup.append([entry.path, entry.get_readable_size()])
+                if filename not in filenames_in_tree:
+                    entry = backup_utility.Entry(filename)
+                    self.list_files_backup.append([entry.path, entry.get_readable_size()])
 
     def on_backup_clicked(self, button):
         print('Backup clicked')
@@ -85,6 +87,12 @@ class SimpleBackupWindow(Gtk.Window):
             tree_row_reference = Gtk.TreeRowReference(self.list_files_backup, path)
             self.row_references.append(tree_row_reference)
         self.button_remove.set_sensitive(True)
+
+    def get_filenames(self):
+        filenames = []
+        for row in self.list_files_backup:
+            filenames.append(row[0])
+        return filenames
 
 def create_dialog(title, parent, action, multiple=False):
     dialog =  Gtk.FileChooserDialog(title, parent,
