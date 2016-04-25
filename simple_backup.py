@@ -12,6 +12,28 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gio, Gdk
 
+
+class Handler:
+
+    def on_delete_window(self, *args):
+        Gtk.main_quit(*args)
+
+    def on_backup_location_clicked(self, button):
+        print("Backup location")
+
+    def on_remove_clicked(self, button):
+        print("Remove clicked")
+
+    def on_add_dir_clicked(self, button):
+        print("Add dir clicked")
+
+    def on_add_file_clicked(self, button):
+        print('Add file clicked')
+
+    def on_backup_clicked(self, button):
+        print('Backup clicked')
+
+
 class SimpleBackupWindow(Gtk.Window):
     def __init__(self):
         # ---- Main Window ------
@@ -159,10 +181,24 @@ def create_button(iconname='', text=''):
     button.add(hbox)
     return button
 
+
 def main():
-    window = SimpleBackupWindow()
-    window.connect("delete-event", Gtk.main_quit)
+    builder = Gtk.Builder()
+    builder.add_from_file("simple_backup.glade")
+    builder.connect_signals(Handler())
+
+    hb = Gtk.HeaderBar()
+    hb.set_show_close_button(True)
+    hb.props.title = 'Simple Backup'
+    button_backup = Gtk.Button(label='Backup')
+    button_backup.get_style_context().add_class("suggested-action")
+    button_backup.connect("clicked", Handler().on_backup_clicked)
+    hb.pack_end(button_backup)
+
+    window = builder.get_object("main_window")
+    window.set_titlebar(hb)
     window.show_all()
+
     Gtk.main()
 
 
