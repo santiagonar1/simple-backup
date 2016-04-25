@@ -17,23 +17,26 @@ from gi.repository import Gtk, Gio, Gdk
 class SimpleBackupWindow(Gtk.Window):
     def __init__(self):
         builder = Gtk.Builder()
-        builder.add_from_file("simple_backup.glade")
+        builder.add_from_file('simple_backup.glade')
         builder.connect_signals(self)
 
         hb = Gtk.HeaderBar()
         hb.set_show_close_button(True)
         hb.props.title = 'Simple Backup'
         button_backup = Gtk.Button(label='Backup')
-        button_backup.get_style_context().add_class("suggested-action")
-        button_backup.connect("clicked", self.on_backup_clicked)
+        button_backup.get_style_context().add_class('suggested-action')
+        button_backup.connect('clicked', self.on_backup_clicked)
         hb.pack_end(button_backup)
 
-        self.window = builder.get_object("main_window")
+        self.window = builder.get_object('main_window')
         self.window.set_titlebar(hb)
         self.window.show_all()
 
-        self.entry_location = builder.get_object("entry_backup_location")
+        self.entry_location = builder.get_object('entry_backup_location')
 
+        self.treeview = builder.get_object('tree_view_files_backup')
+        self.list_files_backup = builder.get_object('liststore_files_backup')
+        #self.treeview.set_model(self.list_files_backup)
 
     def on_delete_window(self, *args):
         Gtk.main_quit(*args)
@@ -50,7 +53,14 @@ class SimpleBackupWindow(Gtk.Window):
         print("Remove clicked")
 
     def on_add_dir_clicked(self, button):
-        print("Add dir clicked")
+        filepath = create_dialog('Please choose a folder',
+                               self.window,
+                               Gtk.FileChooserAction.SELECT_FOLDER)
+
+        if filepath:
+            self.treeview.get_selection().unselect_all()
+            entry = backup_utility.Entry(filepath)
+            self.list_files_backup.append([entry.path, entry.get_readable_size()])
 
     def on_add_file_clicked(self, button):
         print('Add file clicked')
