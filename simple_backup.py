@@ -50,6 +50,8 @@ class SimpleBackupWindow(Gtk.Window):
         if response == Gtk.ResponseType.OK:
             self.entry_location.set_text(dialog.get_filename())
             dialog.destroy()
+        elif response == Gtk.ResponseType.CANCEL:
+            dialog.destroy()
 
     def on_remove_clicked(self, button):
         print("Remove clicked")
