@@ -52,10 +52,15 @@ class SimpleBackupWindow(Gtk.Window):
     def on_remove_clicked(self, button):
         print("Remove clicked")
 
-    def on_add_dir_clicked(self, button):
+    def on_add_clicked(self, button):
+        if Gtk.Buildable.get_name(button) == 'button_add_file':
+            action = Gtk.FileChooserAction.OPEN
+        else:
+            action = Gtk.FileChooserAction.SELECT_FOLDER
+            
         filenames = create_dialog('Please choose a folder',
                                  self.window,
-                                 Gtk.FileChooserAction.SELECT_FOLDER,
+                                 action,
                                  multiple=True)
 
         if filenames:
@@ -63,9 +68,6 @@ class SimpleBackupWindow(Gtk.Window):
             for filename in filenames:
                 entry = backup_utility.Entry(filename)
                 self.list_files_backup.append([entry.path, entry.get_readable_size()])
-
-    def on_add_file_clicked(self, button):
-        print('Add file clicked')
 
     def on_backup_clicked(self, button):
         print('Backup clicked')

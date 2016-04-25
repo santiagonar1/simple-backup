@@ -217,7 +217,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="image">box_add_dir</property>
-                <signal name="clicked" handler="on_add_dir_clicked" swapped="no"/>
+                <signal name="clicked" handler="on_add_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -232,7 +232,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="image">box_add_file</property>
-                <signal name="clicked" handler="on_add_file_clicked" swapped="no"/>
+                <signal name="clicked" handler="on_add_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
