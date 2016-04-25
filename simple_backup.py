@@ -39,19 +39,12 @@ class SimpleBackupWindow(Gtk.Window):
         Gtk.main_quit(*args)
 
     def on_backup_location_clicked(self, button):
-        dialog = create_dialog('Please choose a folder',
+        filepath = create_dialog('Please choose a folder',
                                self.window,
                                Gtk.FileChooserAction.SELECT_FOLDER)
-        dialog.set_default_size(800, 400)
-        current_folder = os.path.expanduser('~')
-        dialog.set_current_folder(current_folder)
 
-        response = dialog.run()
-        if response == Gtk.ResponseType.OK:
-            self.entry_location.set_text(dialog.get_filename())
-            dialog.destroy()
-        elif response == Gtk.ResponseType.CANCEL:
-            dialog.destroy()
+        if filepath:
+            self.entry_location.set_text(filepath)
 
     def on_remove_clicked(self, button):
         print("Remove clicked")
@@ -214,9 +207,22 @@ def create_button(iconname='', text=''):
     return button
 
 def create_dialog(title, parent, action):
-    return Gtk.FileChooserDialog(title, parent,
+    dialog =  Gtk.FileChooserDialog(title, parent,
             action, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
             "Select", Gtk.ResponseType.OK))
+
+    dialog.set_default_size(800, 400)
+    current_folder = os.path.expanduser('~')
+    dialog.set_current_folder(current_folder)
+
+    response = dialog.run()
+    if response == Gtk.ResponseType.OK:
+        filename = dialog.get_filename()
+        dialog.destroy()
+        return filename
+    elif response == Gtk.ResponseType.CANCEL:
+        dialog.destroy()
+        return None
 
 def main():
     SimpleBackupWindow()
