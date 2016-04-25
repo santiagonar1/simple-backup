@@ -54,7 +54,7 @@ class SimpleBackupWindow(Gtk.Window):
             self.entry_location.set_text(filepath)
 
     def on_remove_clicked(self, button):
-        for tree_row_reference in sorted(self.row_references):
+        for tree_row_reference in self.row_references:
             del self.list_files_backup[tree_row_reference.get_path()]
         self.tree_view_selector.unselect_all()
         self.button_remove.set_sensitive(False)
