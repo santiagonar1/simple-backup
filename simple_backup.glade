@@ -162,7 +162,7 @@
                 </child>
                 <child>
                   <object class="GtkTreeViewColumn" id="file_column">
-                    <property name="title" translatable="yes">File</property>
+                    <property name="title" translatable="yes">Name</property>
                     <property name="expand">True</property>
                     <child>
                       <object class="GtkCellRendererText"/>
@@ -174,7 +174,7 @@
                 </child>
                 <child>
                   <object class="GtkTreeViewColumn" id="size_column">
-                    <property name="title" translatable="yes">size</property>
+                    <property name="title" translatable="yes">Size</property>
                     <child>
                       <object class="GtkCellRendererText"/>
                       <attributes>
