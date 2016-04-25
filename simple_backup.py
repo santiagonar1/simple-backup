@@ -36,7 +36,11 @@ class SimpleBackupWindow(Gtk.Window):
 
         self.tree_view_selector = builder.get_object('tree_view_selector')
         self.list_files_backup = builder.get_object('liststore_files_backup')
-        #TODO: Importar el selector desde glade
+
+        self.button_remove = builder.get_object('button_remove')
+
+        # Here we save the selected rows from the tree view
+        self.row_references = []
 
     def on_delete_window(self, *args):
         Gtk.main_quit(*args)
@@ -50,14 +54,17 @@ class SimpleBackupWindow(Gtk.Window):
             self.entry_location.set_text(filepath)
 
     def on_remove_clicked(self, button):
-        print("Remove clicked")
+        for tree_row_reference in sorted(self.row_references):
+            del self.list_files_backup[tree_row_reference.get_path()]
+        self.tree_view_selector.unselect_all()
+        self.button_remove.set_sensitive(False)
 
     def on_add_clicked(self, button):
         if Gtk.Buildable.get_name(button) == 'button_add_file':
             action = Gtk.FileChooserAction.OPEN
         else:
             action = Gtk.FileChooserAction.SELECT_FOLDER
-            
+
         filenames = create_dialog('Please choose a folder',
                                  self.window,
                                  action,
@@ -71,6 +78,13 @@ class SimpleBackupWindow(Gtk.Window):
 
     def on_backup_clicked(self, button):
         print('Backup clicked')
+
+    def on_tree_selection_changed(self, selection):
+        self.row_references = []
+        for path in selection.get_selected_rows()[1]:
+            tree_row_reference = Gtk.TreeRowReference(self.list_files_backup, path)
+            self.row_references.append(tree_row_reference)
+        self.button_remove.set_sensitive(True)
 
 
 class SimpleBackupWindow2(Gtk.Window):
