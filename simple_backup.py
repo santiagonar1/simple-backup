@@ -79,7 +79,11 @@ class SimpleBackupWindow(Gtk.Window):
                     self.list_files_backup.append([entry.path, entry.get_readable_size()])
 
     def on_backup_clicked(self, button):
-        print('Backup clicked')
+        entries = [backup_utility.Entry(f) for f in self.get_filenames()]
+        destiny = self.entry_location.get_text()
+        backup = backup_utility.Backup(entries, destiny)
+        #TODO: elegir commonpath de acuerdo a las preferencias
+        backup.start()
 
     def on_tree_selection_changed(self, selection):
         self.row_references = []
