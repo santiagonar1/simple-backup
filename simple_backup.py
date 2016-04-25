@@ -9,6 +9,7 @@ Date:
 """
 import backup_utility
 import gi
+import os
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gio, Gdk
 
@@ -39,8 +40,11 @@ class SimpleBackupWindow(Gtk.Window):
 
     def on_backup_location_clicked(self, button):
         dialog = create_dialog('Please choose a folder',
+                               self.window,
                                Gtk.FileChooserAction.SELECT_FOLDER)
         dialog.set_default_size(800, 400)
+        current_folder = os.path.expanduser('~')
+        dialog.set_current_folder(current_folder)
 
         response = dialog.run()
         if response == Gtk.ResponseType.OK:
@@ -207,8 +211,8 @@ def create_button(iconname='', text=''):
     button.add(hbox)
     return button
 
-def create_dialog(title, action):
-    return Gtk.FileChooserDialog(title, None,
+def create_dialog(title, parent, action):
+    return Gtk.FileChooserDialog(title, parent,
             action, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
             "Select", Gtk.ResponseType.OK))
 
