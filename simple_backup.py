@@ -13,13 +13,39 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gio, Gdk
 
 
-class Handler:
+class SimpleBackupWindow(Gtk.Window):
+    def __init__(self):
+        builder = Gtk.Builder()
+        builder.add_from_file("simple_backup.glade")
+        builder.connect_signals(self)
+
+        hb = Gtk.HeaderBar()
+        hb.set_show_close_button(True)
+        hb.props.title = 'Simple Backup'
+        button_backup = Gtk.Button(label='Backup')
+        button_backup.get_style_context().add_class("suggested-action")
+        button_backup.connect("clicked", self.on_backup_clicked)
+        hb.pack_end(button_backup)
+
+        self.window = builder.get_object("main_window")
+        self.window.set_titlebar(hb)
+        self.window.show_all()
+
+        self.entry_location = builder.get_object("entry_backup_location")
+
 
     def on_delete_window(self, *args):
         Gtk.main_quit(*args)
 
     def on_backup_location_clicked(self, button):
-        print("Backup location")
+        dialog = create_dialog('Please choose a folder',
+                               Gtk.FileChooserAction.SELECT_FOLDER)
+        dialog.set_default_size(800, 400)
+
+        response = dialog.run()
+        if response == Gtk.ResponseType.OK:
+            self.entry_location.set_text(dialog.get_filename())
+            dialog.destroy()
 
     def on_remove_clicked(self, button):
         print("Remove clicked")
@@ -34,7 +60,7 @@ class Handler:
         print('Backup clicked')
 
 
-class SimpleBackupWindow(Gtk.Window):
+class SimpleBackupWindow2(Gtk.Window):
     def __init__(self):
         # ---- Main Window ------
         Gtk.Window.__init__(self, title='Simple Backup')
@@ -181,24 +207,13 @@ def create_button(iconname='', text=''):
     button.add(hbox)
     return button
 
+def create_dialog(title, action):
+    return Gtk.FileChooserDialog(title, None,
+            action, (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+            "Select", Gtk.ResponseType.OK))
 
 def main():
-    builder = Gtk.Builder()
-    builder.add_from_file("simple_backup.glade")
-    builder.connect_signals(Handler())
-
-    hb = Gtk.HeaderBar()
-    hb.set_show_close_button(True)
-    hb.props.title = 'Simple Backup'
-    button_backup = Gtk.Button(label='Backup')
-    button_backup.get_style_context().add_class("suggested-action")
-    button_backup.connect("clicked", Handler().on_backup_clicked)
-    hb.pack_end(button_backup)
-
-    window = builder.get_object("main_window")
-    window.set_titlebar(hb)
-    window.show_all()
-
+    SimpleBackupWindow()
     Gtk.main()
 
 
