@@ -74,6 +74,8 @@
       <column type="gchararray"/>
       <!-- column-name Size -->
       <column type="gchararray"/>
+      <!-- column-name Type -->
+      <column type="gchararray"/>
     </columns>
   </object>
   <object class="GtkApplicationWindow" id="main_window">
@@ -161,7 +163,18 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkTreeViewColumn" id="file_column">
+                  <object class="GtkTreeViewColumn" id="type_column">
+                    <property name="title" translatable="yes">Type</property>
+                    <child>
+                      <object class="GtkCellRendererPixbuf"/>
+                      <attributes>
+                        <attribute name="icon-name">2</attribute>
+                      </attributes>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkTreeViewColumn" id="name_column">
                     <property name="title" translatable="yes">Name</property>
                     <property name="expand">True</property>
                     <child>

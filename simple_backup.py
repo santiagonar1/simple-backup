@@ -13,6 +13,8 @@ import os
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gio, Gdk
 
+FOLDER_ICON = 'folder-symbolic'
+FILE_ICON = 'text-x-generic-symbolic'
 
 class SimpleBackupWindow(Gtk.Window):
     def __init__(self):
@@ -76,7 +78,8 @@ class SimpleBackupWindow(Gtk.Window):
             for filename in filenames:
                 if filename not in filenames_in_tree:
                     entry = backup_utility.Entry(filename)
-                    self.list_files_backup.append([entry.path, entry.get_readable_size()])
+                    icon_name = FILE_ICON if entry.is_file() else FOLDER_ICON
+                    self.list_files_backup.append([entry.path, entry.get_readable_size(), icon_name])
 
     def on_backup_clicked(self, button):
         entries = [backup_utility.Entry(f) for f in self.get_filenames()]
