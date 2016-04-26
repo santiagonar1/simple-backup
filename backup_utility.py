@@ -13,13 +13,16 @@ class Entry:
     def __init__(self, path):
         self.path = path
         self.size = None
-        if os.path.isfile(self.path):
+        if self.is_file():
             self.size = os.path.getsize(self.path)
         elif os.path.isdir(self.path):
             self.size = get_tree_size(self.path)
 
     def exists(self):
         return os.path.exists(self.path)
+
+    def is_file(self):
+        return os.path.isfile(self.path)
 
     def realpath(self, remove=''):
         rpath = os.path.dirname(self.path).replace(remove, '', 1)
