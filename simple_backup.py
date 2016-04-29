@@ -38,6 +38,7 @@ class SimpleBackupWindow(Gtk.Window):
 
         self.tree_view_selector = builder.get_object('tree_view_selector')
         self.list_files_backup = builder.get_object('liststore_files_backup')
+        self.list_files_backup.set_sort_func(1, compare_size, None)
 
         self.button_remove = builder.get_object('button_remove')
 
@@ -127,6 +128,17 @@ def create_dialog(title, parent, action, multiple=False):
     elif response == Gtk.ResponseType.CANCEL:
         dialog.destroy()
         return None
+
+def compare_size(model, row1, row2, user_data):
+    sort_column, _ = model.get_sort_column_id()
+    value1 = backup_utility.string_to_bytes(model.get_value(row1, sort_column))
+    value2 = backup_utility.string_to_bytes(model.get_value(row2, sort_column))
+    if value1 < value2:
+        return 1
+    elif value1 == value2:
+        return 0
+    else:
+        return -1
 
 def main():
     SimpleBackupWindow()
