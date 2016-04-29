@@ -26,7 +26,7 @@ class SimpleBackupWindow(Gtk.Window):
         hb.set_show_close_button(True)
         hb.props.title = 'Simple Backup'
         button_backup = Gtk.Button(label='Backup')
-        button_backup.get_style_context().add_class('suggested-action')
+        button_backup.get_style_context().add_class(Gtk.STYLE_CLASS_SUGGESTED_ACTION)
         button_backup.connect('clicked', self.on_backup_clicked)
         hb.pack_end(button_backup)
 
