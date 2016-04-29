@@ -86,6 +86,11 @@ def get_tree_size(path):
             total += entry.stat(follow_symlinks=False).st_size
     return total
 
+def string_to_bytes(sbytes):
+    conv = {'B':0, 'KB':3, 'MB':6, 'GB':9, 'TB':12, 'PB':15}
+    value, amount = sbytes.split(' ')
+    return float(value) * (10 ** conv.get(amount, 0))
+
 
 if __name__ == '__main__':
     main()

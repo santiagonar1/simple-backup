@@ -165,6 +165,9 @@
                 <child>
                   <object class="GtkTreeViewColumn" id="type_column">
                     <property name="title" translatable="yes">Type</property>
+                    <property name="clickable">True</property>
+                    <property name="sort_indicator">True</property>
+                    <property name="sort_column_id">2</property>
                     <child>
                       <object class="GtkCellRendererPixbuf"/>
                       <attributes>
@@ -177,6 +180,9 @@
                   <object class="GtkTreeViewColumn" id="name_column">
                     <property name="title" translatable="yes">Name</property>
                     <property name="expand">True</property>
+                    <property name="clickable">True</property>
+                    <property name="sort_indicator">True</property>
+                    <property name="sort_column_id">0</property>
                     <child>
                       <object class="GtkCellRendererText"/>
                       <attributes>
