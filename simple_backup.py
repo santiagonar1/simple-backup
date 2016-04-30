@@ -18,6 +18,14 @@ FILE_ICON = 'text-x-generic-symbolic'
 
 class SimpleBackupWindow(Gtk.Window):
     def __init__(self):
+        screen = Gdk.Screen.get_default()
+
+        css_provider = Gtk.CssProvider()
+        css_provider.load_from_path('style.css')
+
+        context = Gtk.StyleContext()
+        context.add_provider_for_screen(screen, css_provider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
+
         builder = Gtk.Builder()
         builder.add_from_file('simple_backup.glade')
         builder.connect_signals(self)
