@@ -1,7 +1,0 @@
-GtkTreeView row:nth-child(even) {
-background-color: shade(@base_color, 0.9);
-}
-
-GtkTreeView row:nth-child(odd) {
-background-color: shade(@base_color, 1.0);
-}
