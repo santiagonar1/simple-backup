@@ -71,16 +71,6 @@ class Backup(threading.Thread, Observable):
             os.system(c)
             self.notify_observers(entry.path)
 
-def main():
-    filepaths = ['/home/santiago/Documents/Presupuesto.ods',
-             '/home/santiago/Documents/Shortcuts-linux.odt',
-             '/home/santiago/Dropbox/Copias Importantes']
-    entries = []
-    for path in filepaths:
-        entries.append(Entry(path))
-    b = Backup(entries, '/tmp/Backup')
-    b.start()
-    return
 
 def get_tree_size(path):
     """Return total size of files in given path and subdirs."""
@@ -97,6 +87,16 @@ def string_to_bytes(sbytes):
     value, amount = sbytes.split(' ')
     return float(value) * (10 ** conv.get(amount, 0))
 
+def main():
+    filepaths = ['/home/santiago/Documents/Presupuesto.ods',
+             '/home/santiago/Documents/Shortcuts-linux.odt',
+             '/home/santiago/Dropbox/Copias Importantes']
+    entries = []
+    for path in filepaths:
+        entries.append(Entry(path))
+    b = Backup(entries, '/tmp/Backup')
+    b.start()
+    return
 
 if __name__ == '__main__':
     main()
