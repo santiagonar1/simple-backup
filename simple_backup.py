@@ -12,11 +12,12 @@ import gi
 import os
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gio, Gdk
+from observer import Observer
 
 FOLDER_ICON = 'folder-symbolic'
 FILE_ICON = 'text-x-generic-symbolic'
 
-class SimpleBackupWindow(Gtk.Window):
+class SimpleBackup(Observer):
     def __init__(self):
         screen = Gdk.Screen.get_default()
 
@@ -95,6 +96,7 @@ class SimpleBackupWindow(Gtk.Window):
         if destiny:
             entries = [backup_utility.Entry(f) for f in self.get_filenames()]
             backup = backup_utility.Backup(entries, destiny)
+            backup.add_observer(self)
             #TODO: elegir commonpath de acuerdo a las preferencias
             backup.start()
         else:
@@ -105,6 +107,8 @@ class SimpleBackupWindow(Gtk.Window):
             dialog.run()
             dialog.destroy()
 
+    def update(self, observable, event):
+        print(event)
 
     def on_tree_selection_changed(self, selection):
         self.row_references = []
@@ -149,7 +153,7 @@ def compare_size(model, row1, row2, user_data):
         return -1
 
 def main():
-    SimpleBackupWindow()
+    SimpleBackup()
     Gtk.main()
 
 

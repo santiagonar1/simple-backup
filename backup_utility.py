@@ -8,6 +8,7 @@ Date: 21-Apr-2016
 """
 import os
 import threading
+from observer import Observable
 
 
 class Entry:
@@ -48,9 +49,10 @@ class Entry:
         return not self.__eq__(other)
 
 
-class Backup(threading.Thread):
+class Backup(threading.Thread, Observable):
     def __init__(self, entries, destiny, use_common_path=True):
         threading.Thread.__init__(self)
+        Observable.__init__(self)
         self.entries = entries[:]
         self.destiny = destiny.replace(' ', '\\ ')
         self.use_common_path = use_common_path
@@ -66,8 +68,8 @@ class Backup(threading.Thread):
             if not os.path.exists(dpath):
                 os.makedirs(dpath)
             c = 'rsync -avz ' + entry.path.replace(' ','\\ ') + ' ' + dpath
-            print(c)
             os.system(c)
+            self.notify_observers(entry.path)
 
 def main():
     filepaths = ['/home/santiago/Documents/Presupuesto.ods',
