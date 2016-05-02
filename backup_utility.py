@@ -7,6 +7,7 @@ Author: Santiago Narváez Rivas.
 Date: 21-Apr-2016
 """
 import os
+import threading
 
 
 class Entry:
@@ -46,14 +47,17 @@ class Entry:
     def __ne__(self, other):
         return not self.__eq__(other)
 
-class Backup:
-    def __init__(self, entries, destiny):
+
+class Backup(threading.Thread):
+    def __init__(self, entries, destiny, use_common_path=True):
+        threading.Thread.__init__(self)
         self.entries = entries[:]
         self.destiny = destiny.replace(' ', '\\ ')
+        self.use_common_path = use_common_path
 
-    def start(self, use_common_path=True):
+    def run(self):
         commonpath = ''
-        if use_common_path:
+        if self.use_common_path:
             commonpath = os.path.commonpath([f.path for f in self.entries])
             if commonpath == '/':
                 commonpath = ''
