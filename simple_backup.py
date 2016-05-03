@@ -16,6 +16,7 @@ from observer import Observer
 
 FOLDER_ICON = 'folder-symbolic'
 FILE_ICON = 'text-x-generic-symbolic'
+PROGRESSBAR_TEXT = '{0} of {1} files'
 
 class SimpleBackup(Observer):
     def __init__(self):
@@ -50,6 +51,8 @@ class SimpleBackup(Observer):
         self.list_files_backup.set_sort_func(1, compare_size, None)
 
         self.button_remove = builder.get_object('button_remove')
+
+        self.progressbar = builder.get_object('progressbar')
 
         # Here we save the selected rows from the tree view
         self.row_references = []
@@ -94,6 +97,8 @@ class SimpleBackup(Observer):
     def on_backup_clicked(self, button):
         destiny = self.entry_location.get_text()
         if destiny:
+            self.progressbar.props.visible = True
+            self.progressbar.set_text(PROGRESSBAR_TEXT.format(0, len(self.list_files_backup)))
             entries = [backup_utility.Entry(f) for f in self.get_filenames()]
             backup = backup_utility.Backup(entries, destiny)
             backup.add_observer(self)
@@ -108,7 +113,9 @@ class SimpleBackup(Observer):
             dialog.destroy()
 
     def update(self, observable, event):
-        print(event)
+        # event[0] == entry number
+        self.progressbar.set_text(PROGRESSBAR_TEXT.format(event[0], len(self.list_files_backup)))
+        self.progressbar.set_fraction(event[0] / len(self.list_files_backup))
 
     def on_tree_selection_changed(self, selection):
         self.row_references = []
