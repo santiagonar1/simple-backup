@@ -63,13 +63,13 @@ class Backup(threading.Thread, Observable):
             commonpath = os.path.commonpath([f.path for f in self.entries])
             if commonpath == '/':
                 commonpath = ''
-        for entry in self.entries:
+        for nentry, entry in enumerate(self.entries):
             dpath = self.destiny + entry.realpath(remove=commonpath)
             if not os.path.exists(dpath):
                 os.makedirs(dpath)
             c = 'rsync -avz ' + entry.path.replace(' ','\\ ') + ' ' + dpath
             os.system(c)
-            self.notify_observers(entry.path)
+            self.notify_observers((nentry + 1, entry.path))
 
 
 def get_tree_size(path):
