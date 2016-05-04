@@ -35,10 +35,12 @@ class SimpleBackup(Observer):
         hb = Gtk.HeaderBar()
         hb.set_show_close_button(True)
         hb.props.title = 'Simple Backup'
-        button_backup = Gtk.Button(label='Backup')
-        button_backup.get_style_context().add_class(Gtk.STYLE_CLASS_SUGGESTED_ACTION)
-        button_backup.connect('clicked', self.on_backup_clicked)
-        hb.pack_end(button_backup)
+        self.button_backup = Gtk.Button(label='Backup')
+        self.button_backup.get_style_context().add_class(Gtk.STYLE_CLASS_SUGGESTED_ACTION)
+        self.button_backup.connect('clicked', self.on_backup_clicked)
+        self.spinner = Gtk.Spinner()
+        hb.pack_end(self.button_backup)
+        hb.pack_end(self.spinner)
 
         self.window = builder.get_object('main_window')
         self.window.set_titlebar(hb)
@@ -101,6 +103,7 @@ class SimpleBackup(Observer):
         if destiny:
             self.progressbar.props.visible = True
             self.progressbar.set_text(PROGRESSBAR_TEXT.format(0, len(self.list_files_backup)))
+            self.spinner.start()
             self.toggle_buttons()
             self.tree_view_selector.unselect_all()
             entries = [backup_utility.Entry(f) for f in self.get_filenames()]
@@ -122,6 +125,7 @@ class SimpleBackup(Observer):
         self.progressbar.set_fraction(event[0] / len(self.list_files_backup))
         if event[0] == len(self.list_files_backup):
             self.toggle_buttons()
+            self.spinner.stop()
 
     def on_tree_selection_changed(self, selection):
         self.row_references = []
