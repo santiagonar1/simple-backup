@@ -65,7 +65,7 @@ class SimpleBackup(Observer):
         Gtk.main_quit(*args)
 
     def on_backup_location_clicked(self, button):
-        filepath = create_dialog('Please choose a folder',
+        filepath = create_dialog('Please Choose a Destination Folder',
                                  self.window,
                                  Gtk.FileChooserAction.SELECT_FOLDER)
 
@@ -81,10 +81,12 @@ class SimpleBackup(Observer):
     def on_add_clicked(self, button):
         if Gtk.Buildable.get_name(button) == 'button_add_file':
             action = Gtk.FileChooserAction.OPEN
+            title = 'Please Choose File(s) to Backup'
         else:
             action = Gtk.FileChooserAction.SELECT_FOLDER
+            title = 'Please Choose Folder(s) to Backup'
 
-        filenames = create_dialog('Please choose a folder',
+        filenames = create_dialog(title,
                                  self.window,
                                  action,
                                  multiple=True)
