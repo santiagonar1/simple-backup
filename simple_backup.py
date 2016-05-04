@@ -131,7 +131,8 @@ class SimpleBackup(Observer):
             self.toggle_buttons()
             self.spinner.stop()
             make_notification('Backup Finished',
-                              'All the files have been saved in the new destination')
+                              'All the files have been saved in the new destination',
+                              'dialog-information')
 
     def on_tree_selection_changed(self, selection):
         self.row_references = []
@@ -181,9 +182,9 @@ def compare_size(model, row1, row2, user_data):
     else:
         return -1
 
-def make_notification(title, body):
+def make_notification(title, body, icon):
     Notify.init('test')
-    notification = Notify.Notification.new(title, body)
+    notification = Notify.Notification.new(title, body, icon)
     notification.set_timeout(Notify.EXPIRES_NEVER)
     notification.show()
 
