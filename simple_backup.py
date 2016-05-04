@@ -51,6 +51,8 @@ class SimpleBackup(Observer):
         self.list_files_backup.set_sort_func(1, compare_size, None)
 
         self.button_remove = builder.get_object('button_remove')
+        self.button_add_file = builder.get_object('button_add_file')
+        self.button_add_dir = builder.get_object('button_add_dir')
 
         self.progressbar = builder.get_object('progressbar')
 
@@ -99,6 +101,8 @@ class SimpleBackup(Observer):
         if destiny:
             self.progressbar.props.visible = True
             self.progressbar.set_text(PROGRESSBAR_TEXT.format(0, len(self.list_files_backup)))
+            self.toggle_buttons()
+            self.tree_view_selector.unselect_all()
             entries = [backup_utility.Entry(f) for f in self.get_filenames()]
             backup = backup_utility.Backup(entries, destiny)
             backup.add_observer(self)
@@ -116,6 +120,8 @@ class SimpleBackup(Observer):
         # event[0] == entry number
         self.progressbar.set_text(PROGRESSBAR_TEXT.format(event[0], len(self.list_files_backup)))
         self.progressbar.set_fraction(event[0] / len(self.list_files_backup))
+        if event[0] == len(self.list_files_backup):
+            self.toggle_buttons()
 
     def on_tree_selection_changed(self, selection):
         self.row_references = []
@@ -129,6 +135,11 @@ class SimpleBackup(Observer):
         for row in self.list_files_backup:
             filenames.append(row[0])
         return filenames
+
+    def toggle_buttons(self):
+        self.button_add_dir.props.sensitive = not self.button_add_dir.props.sensitive
+        self.button_add_file.props.sensitive = not self.button_add_file.props.sensitive
+        self.button_remove.props.sensitive = False
 
 def create_dialog(title, parent, action, multiple=False):
     dialog =  Gtk.FileChooserDialog(title, parent,
