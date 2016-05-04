@@ -11,7 +11,8 @@ import backup_utility
 import gi
 import os
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, Gio, Gdk
+gi.require_version('Notify', '0.7')
+from gi.repository import Gtk, Gdk, Notify
 from observer import Observer
 
 FOLDER_ICON = 'folder-symbolic'
@@ -52,6 +53,7 @@ class SimpleBackup(Observer):
         self.list_files_backup = builder.get_object('liststore_files_backup')
         self.list_files_backup.set_sort_func(1, compare_size, None)
 
+        self.button_bakcup_location = builder.get_object('button_backup_location')
         self.button_remove = builder.get_object('button_remove')
         self.button_add_file = builder.get_object('button_add_file')
         self.button_add_dir = builder.get_object('button_add_dir')
@@ -128,6 +130,8 @@ class SimpleBackup(Observer):
         if event[0] == len(self.list_files_backup):
             self.toggle_buttons()
             self.spinner.stop()
+            make_notification('Backup Finished',
+                              'All the files have been saved in the new destination')
 
     def on_tree_selection_changed(self, selection):
         self.row_references = []
@@ -145,6 +149,7 @@ class SimpleBackup(Observer):
     def toggle_buttons(self):
         self.button_add_dir.props.sensitive = not self.button_add_dir.props.sensitive
         self.button_add_file.props.sensitive = not self.button_add_file.props.sensitive
+        self.button_bakcup_location.props.sensitive = not self.button_bakcup_location.props.sensitive
         self.button_remove.props.sensitive = False
 
 def create_dialog(title, parent, action, multiple=False):
@@ -175,6 +180,12 @@ def compare_size(model, row1, row2, user_data):
         return 0
     else:
         return -1
+
+def make_notification(title, body):
+    Notify.init('test')
+    notification = Notify.Notification.new(title, body)
+    notification.set_timeout(Notify.EXPIRES_NEVER)
+    notification.show()
 
 def main():
     SimpleBackup()
