@@ -18,6 +18,9 @@ from observer import Observer
 FOLDER_ICON = 'folder-symbolic'
 FILE_ICON = 'text-x-generic-symbolic'
 PROGRESSBAR_TEXT = '{0} of {1} files'
+# Notify ID
+APPINDICATOR_ID = 'simplebackup'
+NOTIFY_ICON = 'dialog-information'
 
 class SimpleBackup(Observer):
     def __init__(self):
@@ -132,7 +135,7 @@ class SimpleBackup(Observer):
             self.spinner.stop()
             make_notification('Backup Finished',
                               'All the files have been saved in the new destination',
-                              'dialog-information')
+                              NOTIFY_ICON)
 
     def on_tree_selection_changed(self, selection):
         self.row_references = []
@@ -183,7 +186,7 @@ def compare_size(model, row1, row2, user_data):
         return -1
 
 def make_notification(title, body, icon):
-    Notify.init('test')
+    Notify.init(APPINDICATOR_ID)
     notification = Notify.Notification.new(title, body, icon)
     notification.set_timeout(Notify.EXPIRES_NEVER)
     notification.show()
